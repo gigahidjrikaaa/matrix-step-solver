@@ -91,7 +91,14 @@ def MatrixSolverPage():
 
 def AboutPage():
     st.title('About')
-    st.write('This is the about page.')
+    st.write('This is a project made for the _Vector and Matrix Theory_ course under **Prof. Dr.rer.nat. Indah Emilia Wijayanti, S.Si., M.Si.** at the Department of Mathematics, Faculty of Mathematics and Natural Sciences, Universitas Gadjah Mada.')
+    st.divider()
+    st.write('This project is made by:')
+    st.write('1. Giga Hidjrika Aura Adkhy - 21/479228/TK/52833')
+    st.write('2. ')
+    st.write('3. ')    
+
+
 
 # Sidebar
 st.sidebar.title('Matrix Solver')
