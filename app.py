@@ -1,15 +1,14 @@
 import streamlit as st
 import pandas as pd
-# Library for matrix operations
 import numpy as np
 
 def HomePage():
-    st.title('Welcome to Matrix Solver')
-    st.write('This is a web app that will help you solve a system of linear equations using the matrix method.')
-    st.write('Please select "Matrix Solver" from the navigation to start solving your system of linear equations.')
-    
     st.title('Matrix Solver Web App')
     st.write("Welcome to the Matrix Solver Web App! This app will help you solve a system of linear equations using the matrix method.")
+    st.info('Please select "Matrix Solver" from the navigation to start solving your own system of linear equations.')
+
+    st.divider()
+    st.header('Introduction')
 
     st.write("Here's a simple example of a system of linear equations:")
     st.latex(r'''
@@ -40,12 +39,31 @@ def HomePage():
     \end{bmatrix}
     ''')
             
+    # Create a matrix using numpy
+    A = np.array([[1, 1, 1], [0, 1, 1], [0, 0, 1]])
+    b = np.array([6, -4, 3])
+    matrix_A = pd.DataFrame(A, columns=['x', 'y', 'z'])
+    matrix_b = pd.DataFrame(b, columns=['Constants'])
+    x = np.linalg.solve(A, b)
+    st.write("The solution to the system of linear equations is:")
+    st.write(x)
+    st.latex(r'''
+    \begin{bmatrix}
+    x \\
+    y \\
+    z
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+    1 \\
+    -7 \\
+    3
+    \end{bmatrix}
+    ''')
 
-    st.write("Here's our first attempt at using data to create a table:")
-    st.write(pd.DataFrame({
-        'first column': [1, 2, 3, 4],
-        'second column': [10, 20, 30, 40]
-    }))
+    # Display Matrix A without the row header
+    st.write('Matrix A:')
+    st.write(matrix_A, header=False)
 
 def MatrixSolverPage():
     st.title('Matrix Solver')
