@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
+######################
+# Home Page Section
+######################
 def HomePage():
     st.title('Matrix Solver Web App')
     st.write("Welcome to the Matrix Solver Web App! This app will help you solve a system of linear equations using the matrix method.")
@@ -72,6 +75,10 @@ def HomePage():
     if st.button('Calculate Determinant'):
         st.write('Determinant of matrix A:', np.linalg.det(matrix_A.values))
 
+
+######################
+# Matrix Solver Section
+######################
 def MatrixSolverPage():
     st.title('Matrix Solver')
     st.write('This is the Matrix Solver page.')
@@ -96,6 +103,9 @@ def MatrixSolverPage():
                         A.append(st.number_input(f'A[{i+1},{j+1}]', value=0, key=f'A[{i+1},{j+1}]'))
 
 
+######################
+# About Page Section
+######################
 def AboutPage():
     st.title('About')
     st.write('This is a project made for the _Vector and Matrix Theory_ course under **Prof. Dr.rer.nat. Indah Emilia Wijayanti, S.Si., M.Si.** at the Department of Mathematics, Faculty of Mathematics and Natural Sciences, Universitas Gadjah Mada.')
@@ -105,14 +115,18 @@ def AboutPage():
     st.write('2. ')
     st.write('3. ')    
 
-
-
+######################
 # Sidebar
+######################
 st.sidebar.title('Matrix Solver')
 st.sidebar.write('Vector and Matrix Theory Project.')
 # Sidebar Navigation to Home
 nav = st.sidebar.radio('', ['Home', 'Matrix Solver', 'About'])
 
+
+######################
+# Main Section
+######################
 if nav == 'Home':
     HomePage()
 elif nav == 'Matrix Solver':
