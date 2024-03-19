@@ -42,7 +42,7 @@ def HomePage():
     # Create a matrix using numpy
     A = np.array([[1, 1, 1], [0, 1, 1], [0, 0, 1]])
     b = np.array([6, -4, 3])
-    matrix_A = pd.DataFrame(A, columns=['x', 'y', 'z'])
+    matrix_A = pd.DataFrame(A)
     matrix_b = pd.DataFrame(b, columns=['Constants'])
     x = np.linalg.solve(A, b)
     st.write("The solution to the system of linear equations is:")
@@ -61,9 +61,16 @@ def HomePage():
     \end{bmatrix}
     ''')
 
-    # Display Matrix A without the row header
-    st.write('Matrix A:')
-    st.write(matrix_A, header=False)
+    # Matrix using dataframe
+    st.write('Matrix using dataframe:')
+
+    # Test data editor
+    matrix_A = st.data_editor(matrix_A, hide_index=True, key='matrix_A')
+    st.data_editor(matrix_b)
+
+    # When matrix_A is edited, the value of determinant will be updated
+    if st.button('Calculate Determinant'):
+        st.write('Determinant of matrix A:', np.linalg.det(matrix_A.values))
 
 def MatrixSolverPage():
     st.title('Matrix Solver')
