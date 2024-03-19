@@ -4,6 +4,7 @@ import numpy as np
 
 ######################
 # Home Page Section
+# latex of the example linear equations written here
 ######################
 def HomePage():
     st.title('Matrix Solver Web App')
@@ -78,6 +79,7 @@ def HomePage():
 
 ######################
 # Matrix Solver Section
+# Page for custom matrix input
 ######################
 def MatrixSolverPage():
     st.title('Matrix Solver')
@@ -85,22 +87,64 @@ def MatrixSolverPage():
     
     col1, col2 = st.columns(2)
     with col1:
+        st.subheader('Matrix A')
+        sc_1a, sc_1b = st.columns(2)
         # Input fields for the size of the matrix
-        m = st.number_input('Enter the number of rows', min_value=1, value=2)
+        with sc_1a:
+            m = st.number_input('Number of rows (m)', min_value=1, value=2, key='m')
+        with sc_1b:
+            n = st.number_input('Number of columns (n)', min_value=1, value=2, key='n')
     with col2:
-        n = st.number_input('Enter the number of columns', min_value=1, value=2)
-    # Generate button
-    if st.button('Generate Matrix'):
-        with col1: # For Matrix A Input
-            st.write('Enter the elements of Matrix A')
-            A = []
-            # Create subcolumns for each element of the matrix
-            for i in range(m):
-                subcolumns = []
-                for j in range(n):
-                    subcolumns = st.columns(n)
-                    with subcolumns[j]:
-                        A.append(st.number_input(f'A[{i+1},{j+1}]', value=0, key=f'A[{i+1},{j+1}]'))
+        st.subheader('Matrix B')
+        sc_2a, sc_2b = st.columns(2)    
+        # Input fields for the size of the matrix
+        with sc_2a:
+            p = st.number_input('Number of rows (p)', min_value=1, value=2, key='p')
+        with sc_2b:
+            q = st.number_input('Number of columns (q)', min_value=1, value=2, key='q')
+    with col1: # For Matrix A Input
+        st.write('Enter the elements of Matrix A')
+        A = []
+        subcolumns = []
+        subcolumns = st.columns(n)
+        # Create subcolumns for each element of the matrix
+        for i in range(m):
+            for j in range(n):
+                with subcolumns[j]:
+                    A.append(st.number_input(f'A[{i+1},{j+1}]', value=0, key=f'A[{i+1},{j+1}]'))
+    with col2: # For Matrix B Input
+        st.write('Enter the elements of Matrix B')
+        B = []
+        subcolumns = []
+        subcolumns = st.columns(q)
+        # Create subcolumns for each element of the matrix
+        for i in range(p):
+            for j in range(q):
+                with subcolumns[j]:
+                    B.append(st.number_input(f'B[{i+1},{j+1}]', value=0, key=f'B[{i+1},{j+1}]'))
+    # Create a button to solve the matrix
+    if st.button('Solve'):
+        A = np.array(A).reshape(m, n)
+        B = np.array(B).reshape(p, q)
+        if n != p:
+            st.error('The number of columns of matrix A must be equal to the number of rows of matrix B.')
+        else:
+            X = np.linalg.solve(A, B)
+            st.write('The solution to the system of linear equations is:')
+            # st.write(X)
+            # Write the solution in latex
+            X_latex = r'\begin{bmatrix}'
+            for i in range(X.shape[0]): 
+                for j in range(X.shape[1]):
+                    X_latex += str(X[i, j])
+                    if j < X.shape[1] - 1:
+                        X_latex += ' & '
+                    else:
+                        X_latex += r' \\ '
+            X_latex += r'\end{bmatrix}'
+            st.latex(X_latex)
+            
+
 
 
 ######################
