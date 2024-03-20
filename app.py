@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+from fractions import Fraction
 
 ######################
 # Function to write pandas dataframe in latex
@@ -12,7 +13,42 @@ def df_to_latex(df):
     latex = latex.replace('\n', '\\\\\n')
     # Add the latex environment
     latex = r'\begin{bmatrix}' + '\n' + latex + r'\end{bmatrix}'
-    return latex
+    return latexy
+
+######################
+# Function for matrix number 1
+######################
+def print_matrix(matrix):
+    for row in matrix:
+        st.write(row)
+# Function for Gaussian elimination
+def gauss_elimination(matrix):
+    n = len(matrix)
+    for i in range(n):
+        # Pivoting
+        if matrix[i][i] == 0:
+            for j in range(i+1, n):
+                if matrix[j][i] != 0:
+                    matrix[i], matrix[j] = matrix[j], matrix[i]
+                    st.write("Swap row", i+1, "and row", j+1)
+                    print_matrix(matrix)
+                    break
+        # Elimination
+        for j in range(i+1, n):
+            if matrix[j][i] != 0:
+                factor = matrix[j][i] / matrix[i][i]
+                for k in range(i, n):
+                    matrix[j][k] -= factor * matrix[i][k]
+                st.write("\nEliminate row", j+1, "using row", i+1, "with factor", Fraction(factor).limit_denominator())
+                print_matrix(matrix)
+    return matrix
+
+# Function to calculate determinant
+def determinant(matrix):
+    det = 1
+    for i in range(len(matrix)):
+        det *= matrix[i][i]
+    return det
 
 ######################
 # Home Page Section
@@ -26,8 +62,25 @@ def HomePage():
     st.divider()
     st.header('Introduction')
 
-    ### GARAPAN MANUAL SOAL VERSI LATEX TARUH DI SINI ###
-    
+    ### Matrix number 1 ###
+    # Displaying the matrix
+    st.write("Matrix:")
+    matrix = [
+        [2, 3, 1, 2],
+        [-4, 1, -1, 0],
+        [0, 1, 2, 1],
+        [0, 0, 1, 0]
+    ]
+    print_matrix(matrix)
+    # Applying Gauss elimination
+    st.write("\nApplying Gaussian Elimination:")
+    gauss_matrix = gauss_elimination(matrix)
+    # Calculating determinant
+    det = determinant(gauss_matrix)
+    # Displaying the matrix after Gaussian elimination and determinant
+    st.write("\nMatrix after Gauss elimination:")
+    print_matrix(gauss_matrix)
+    st.write("\nDeterminant:", det)
 
     ### CONTOH ###
     st.write("Here's a simple example of a system of linear equations:")
