@@ -197,7 +197,7 @@ def MatrixSolverPage():
         X_latex += r'\end{bmatrix}'
         st.latex(X_latex)
 
-            
+
 ######################
 # Operations for the Matrices
 # A and B are the matrices
@@ -256,11 +256,14 @@ def TwoMatrixOperationsPage():
 
     with col[1]:
         if st.button('Addition'):
-            st.latex(df_to_latex(pd.DataFrame(Addition(A, B))))
+            result = Addition(A, B)
+            st.write(pd.DataFrame(result))
         if st.button('Subtraction'):
-            st.latex(df_to_latex(pd.DataFrame(Subtraction(A, B))))
+            result = Subtraction(A, B)
+            st.write(pd.DataFrame(result))
         if st.button('Multiplication'):
-            st.latex(df_to_latex(pd.DataFrame(Multiplication(A, B))))
+            result = Multiplication(A, B)
+            st.write(pd.DataFrame(result))
     
     # Create a button to solve the matrix
     if st.button('Solve'):
@@ -282,7 +285,8 @@ def TwoMatrixOperationsPage():
                     else:
                         X_latex += r' \\ '
             X_latex += r'\end{bmatrix}'
-            st.latex(X_latex)       
+            st.latex(X_latex)
+ 
 
 ######################
 # About Page Section
