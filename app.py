@@ -13,7 +13,7 @@ def df_to_latex(df):
     latex = latex.replace('\n', '\\\\\n')
     # Add the latex environment
     latex = r'\begin{bmatrix}' + '\n' + latex + r'\end{bmatrix}'
-    return latexy
+    return latex
 
 ######################
 # Function for matrix number 1
