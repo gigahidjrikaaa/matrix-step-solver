@@ -20,7 +20,7 @@ def df_to_latex(df):
 ######################
 def print_matrix(matrix):
     for row in matrix:
-        st.write(row)
+        st.table(row)
 # Function for Gaussian elimination
 def gauss_elimination(matrix):
     n = len(matrix)
@@ -64,7 +64,7 @@ def HomePage():
 
     ### Matrix number 1 ###
     # Displaying the matrix
-    st.write("Matrix:")
+    st.table("Matrix:")
     matrix = [
         [2, 3, 1, 2],
         [-4, 1, -1, 0],
@@ -73,12 +73,12 @@ def HomePage():
     ]
     print_matrix(matrix)
     # Applying Gauss elimination
-    st.write("\nApplying Gaussian Elimination:")
+    st.table("\nApplying Gaussian Elimination:")
     gauss_matrix = gauss_elimination(matrix)
     # Calculating determinant
     det = determinant(gauss_matrix)
     # Displaying the matrix after Gaussian elimination and determinant
-    st.write("\nMatrix after Gauss elimination:")
+    st.table("\nMatrix after Gauss elimination:")
     print_matrix(gauss_matrix)
     st.write("\nDeterminant:", det)
 
