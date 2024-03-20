@@ -32,7 +32,7 @@ def gauss_elimination(matrix):
                 if matrix[j][i] != 0:
                     matrix[i], matrix[j] = matrix[j], matrix[i]
                     st.write("Swap row", i+1, "and row", j+1)
-                    print_matrix(matrix)
+                    display_matrix(matrix)
                     break
         # Elimination
         for j in range(i+1, n):
@@ -41,7 +41,7 @@ def gauss_elimination(matrix):
                 for k in range(i, n):
                     matrix[j][k] -= factor * matrix[i][k]
                 st.write("\nEliminate row", j+1, "using row", i+1, "with factor", Fraction(factor).limit_denominator())
-                print_matrix(matrix)
+                display_matrix(matrix)
     return matrix
 
 # Function to calculate determinant
