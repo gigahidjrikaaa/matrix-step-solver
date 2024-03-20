@@ -3,6 +3,18 @@ import pandas as pd
 import numpy as np
 
 ######################
+# Function to write pandas dataframe in latex
+######################
+def df_to_latex(df):
+    # Convert the dataframe to a string in latex format
+    latex = df.to_latex(index=False, escape=False)
+    # Replace the \n with \\ to make it a single line
+    latex = latex.replace('\n', '\\\\\n')
+    # Add the latex environment
+    latex = r'\begin{bmatrix}' + '\n' + latex + r'\end{bmatrix}'
+    return latex
+
+######################
 # Home Page Section
 # latex of the example linear equations written here
 ######################
@@ -14,6 +26,10 @@ def HomePage():
     st.divider()
     st.header('Introduction')
 
+    ### GARAPAN MANUAL SOAL VERSI LATEX TARUH DI SINI ###
+    
+
+    ### CONTOH ###
     st.write("Here's a simple example of a system of linear equations:")
     st.latex(r'''
     \begin{align*}
@@ -79,49 +95,118 @@ def HomePage():
 
 ######################
 # Matrix Solver Section
-# Page for custom matrix input
+# Page for custom single matrix solver.
 ######################
 def MatrixSolverPage():
     st.title('Matrix Solver')
     st.write('This is the Matrix Solver page.')
-    
-    col1, col2 = st.columns(2)
-    with col1:
+    st.write('This page will help you solve a system of linear equations using the matrix method.')
+    st.divider()
+
+    st.subheader('Matrix Input')
+    col = st.columns(2)
+    with col[0]:
+        st.number_input('Number of rows (m)', min_value=1, value=2, key='m')
+    with col[1]:
+        st.number_input('Number of columns (n)', min_value=1, value=2, key='n')
+
+    m = st.number_input('Number of rows (m)', min_value=1, value=2, key='m')
+    n = st.number_input('Number of columns (n)', min_value=1, value=2, key='n')
+    A = []
+    subcolumns = []
+    subcolumns = st.columns(n)
+    for i in range(m):
+        for j in range(n):
+            with subcolumns[j]:
+                A.append(st.number_input(f'A[{i+1},{j+1}]', value=0, key=f'A[{i+1},{j+1}]'))
+
+    # Create a button to get the determinant step by step
+    if st.button('Find Determinant'):
+        A = np.array(A).reshape(m, n)
+        determinant = np.linalg.det(A)
+        st.write('The determinant of the matrix is:', determinant)
+
+    # Create a button to solve the matrix
+    if st.button('Solve'):
+        A = np.array(A).reshape(m, n)
+        b = np.array([6, -4, 3])
+        x = np.linalg.solve(A, b)
+        st.write('The solution to the system of linear equations is:')
+        st.write(x)
+        # Write the solution in latex
+        X_latex = r'\begin{bmatrix}'
+        for i in range(x.shape[0]): 
+            X_latex += str(x[i])
+            if i < x.shape[0] - 1:
+                X_latex += r' \\ '
+        X_latex += r'\end{bmatrix}'
+        st.latex(X_latex)
+
+            
+######################
+# Operations for the Matrices
+# A and B are the matrices
+######################
+def Addition(A, B):
+    A = np.array(A).reshape(len(A)//2, 2)
+    B = np.array(B).reshape(len(B)//2, 2)
+    return A + B
+
+def Subtraction(A, B):
+    A = np.array(A).reshape(len(A)//2, 2)
+    B = np.array(B).reshape(len(B)//2, 2)
+    return A - B
+
+def Multiplication(A, B):
+    A = np.array(A).reshape(len(A)//2, 2)
+    B = np.array(B).reshape(len(B)//2, 2)
+    return A @ B
+
+######################
+# Two Matrix Operations Section
+# Page for matrix operations
+######################
+def TwoMatrixOperationsPage():
+    st.title('Two Matrix Operations')
+    st.write('This is the Two Matrix Operations page.')
+    st.write('This page will help you perform operations on two matrices.')
+    st.write('Please select the operation you want to perform from the dropdown menu.')
+
+    col = st.columns(3)
+    with col[0]:
+        # Matrix A Input
         st.subheader('Matrix A')
-        sc_1a, sc_1b = st.columns(2)
-        # Input fields for the size of the matrix
-        with sc_1a:
-            m = st.number_input('Number of rows (m)', min_value=1, value=2, key='m')
-        with sc_1b:
-            n = st.number_input('Number of columns (n)', min_value=1, value=2, key='n')
-    with col2:
-        st.subheader('Matrix B')
-        sc_2a, sc_2b = st.columns(2)    
-        # Input fields for the size of the matrix
-        with sc_2a:
-            p = st.number_input('Number of rows (p)', min_value=1, value=2, key='p')
-        with sc_2b:
-            q = st.number_input('Number of columns (q)', min_value=1, value=2, key='q')
-    with col1: # For Matrix A Input
-        st.write('Enter the elements of Matrix A')
+        m = st.number_input('Number of rows (m)', min_value=1, value=2, key='m')
+        n = st.number_input('Number of columns (n)', min_value=1, value=2, key='n')
         A = []
         subcolumns = []
         subcolumns = st.columns(n)
-        # Create subcolumns for each element of the matrix
         for i in range(m):
             for j in range(n):
                 with subcolumns[j]:
                     A.append(st.number_input(f'A[{i+1},{j+1}]', value=0, key=f'A[{i+1},{j+1}]'))
-    with col2: # For Matrix B Input
-        st.write('Enter the elements of Matrix B')
+        
+    with col[2]:
+        # Matrix B Input
+        st.subheader('Matrix B')
+        p = st.number_input('Number of rows (p)', min_value=1, value=2, key='p')
+        q = st.number_input('Number of columns (q)', min_value=1, value=2, key='q')
         B = []
         subcolumns = []
         subcolumns = st.columns(q)
-        # Create subcolumns for each element of the matrix
         for i in range(p):
             for j in range(q):
                 with subcolumns[j]:
                     B.append(st.number_input(f'B[{i+1},{j+1}]', value=0, key=f'B[{i+1},{j+1}]'))
+
+    with col[1]:
+        if st.button('Addition'):
+            st.latex(df_to_latex(pd.DataFrame(Addition(A, B))))
+        if st.button('Subtraction'):
+            st.latex(df_to_latex(pd.DataFrame(Subtraction(A, B))))
+        if st.button('Multiplication'):
+            st.latex(df_to_latex(pd.DataFrame(Multiplication(A, B))))
+    
     # Create a button to solve the matrix
     if st.button('Solve'):
         A = np.array(A).reshape(m, n)
@@ -131,7 +216,7 @@ def MatrixSolverPage():
         else:
             X = np.linalg.solve(A, B)
             st.write('The solution to the system of linear equations is:')
-            # st.write(X)
+            st.write(X)
             # Write the solution in latex
             X_latex = r'\begin{bmatrix}'
             for i in range(X.shape[0]): 
@@ -142,10 +227,7 @@ def MatrixSolverPage():
                     else:
                         X_latex += r' \\ '
             X_latex += r'\end{bmatrix}'
-            st.latex(X_latex)
-            
-
-
+            st.latex(X_latex)       
 
 ######################
 # About Page Section
@@ -165,7 +247,7 @@ def AboutPage():
 st.sidebar.title('Matrix Solver')
 st.sidebar.write('Vector and Matrix Theory Project.')
 # Sidebar Navigation to Home
-nav = st.sidebar.radio('', ['Home', 'Matrix Solver', 'About'])
+nav = st.sidebar.radio('', ['Home', 'Single Matrix Solver', 'Two Matrix Operations', 'About'])
 
 
 ######################
@@ -173,7 +255,9 @@ nav = st.sidebar.radio('', ['Home', 'Matrix Solver', 'About'])
 ######################
 if nav == 'Home':
     HomePage()
-elif nav == 'Matrix Solver':
+elif nav == 'Single Matrix Solver':
     MatrixSolverPage()
+elif nav == 'Two Matrix Operations':
+    TwoMatrixOperationsPage()
 else:
     AboutPage()
