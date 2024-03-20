@@ -18,9 +18,10 @@ def df_to_latex(df):
 ######################
 # Function for matrix number 1
 ######################
-def print_matrix(matrix):
-    for row in matrix:
-        st.table(row)
+def display_matrix(matrix):
+    df = pd.DataFrame(matrix)
+    st.dataframe(df)
+
 # Function for Gaussian elimination
 def gauss_elimination(matrix):
     n = len(matrix)
@@ -64,22 +65,23 @@ def HomePage():
 
     ### Matrix number 1 ###
     # Displaying the matrix
-    st.table("Matrix:")
+    st.write("Matrix:")
     matrix = [
         [2, 3, 1, 2],
         [-4, 1, -1, 0],
         [0, 1, 2, 1],
         [0, 0, 1, 0]
     ]
-    print_matrix(matrix)
+    display_matrix(matrix)
+
     # Applying Gauss elimination
-    st.table("\nApplying Gaussian Elimination:")
+    st.write("\nApplying Gaussian Elimination:")
     gauss_matrix = gauss_elimination(matrix)
     # Calculating determinant
     det = determinant(gauss_matrix)
     # Displaying the matrix after Gaussian elimination and determinant
-    st.table("\nMatrix after Gauss elimination:")
-    print_matrix(gauss_matrix)
+    st.write("\nMatrix after Gauss elimination:")
+    display_matrix(gauss_matrix)
     st.write("\nDeterminant:", det)
 
     ### CONTOH ###
