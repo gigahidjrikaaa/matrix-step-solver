@@ -65,7 +65,7 @@ def HomePage():
 
     ### Matrix number 1 ###
     # Displaying the matrix
-    st.write("Matrix:")
+    st.title("Matrix:")
     matrix = [
         [2, 3, 1, 2],
         [-4, 1, -1, 0],
@@ -75,14 +75,15 @@ def HomePage():
     display_matrix(matrix)
 
     # Applying Gauss elimination
-    st.write("\nApplying Gaussian Elimination:")
+    st.title("\nApplying Gaussian Elimination:", style={"font-size":"24px"})
     gauss_matrix = gauss_elimination(matrix)
     # Calculating determinant
     det = determinant(gauss_matrix)
     # Displaying the matrix after Gaussian elimination and determinant
     st.write("\nMatrix after Gauss elimination:")
     display_matrix(gauss_matrix)
-    st.write("\nDeterminant:", det)
+    st.subtitle("\nDeterminant:", det, style={"font-size":"24px"})
+    st.divider()
 
     ### CONTOH ###
     st.write("Here's a simple example of a system of linear equations:")
