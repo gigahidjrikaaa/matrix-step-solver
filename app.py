@@ -61,11 +61,10 @@ def HomePage():
     st.info('Please select "Matrix Solver" from the navigation to start solving your own system of linear equations.')
 
     st.divider()
-    st.header('Introduction')
 
     ### Matrix number 1 ###
     # Displaying the matrix
-    st.title("Matrix:")
+    st.header("Solving matrix number 1:")
     matrix = [
         [2, 3, 1, 2],
         [-4, 1, -1, 0],
@@ -75,14 +74,14 @@ def HomePage():
     display_matrix(matrix)
 
     # Applying Gauss elimination
-    st.title("\nApplying Gaussian Elimination:", style={"font-size":"24px"})
+    st.subheader("\nApplying Gaussian Elimination:")
     gauss_matrix = gauss_elimination(matrix)
     # Calculating determinant
     det = determinant(gauss_matrix)
     # Displaying the matrix after Gaussian elimination and determinant
     st.write("\nMatrix after Gauss elimination:")
     display_matrix(gauss_matrix)
-    st.subtitle("\nDeterminant:", det, style={"font-size":"24px"})
+    st.write("\nDeterminant:", det)
     st.divider()
 
     ### CONTOH ###
