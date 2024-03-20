@@ -292,7 +292,7 @@ def AboutPage():
     st.write('This project is made by:')
     st.write('1. Giga Hidjrika Aura Adkhy - 21/479228/TK/52833')
     st.write('2. Salwa Maharani - 21/481194/TK/53113')
-    st.write('3. ')    
+    st.write('3. Noer Azizah PS - 20/463611/TK/51603')    
 
 ######################
 # Sidebar
