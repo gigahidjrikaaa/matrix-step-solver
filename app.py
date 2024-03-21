@@ -147,6 +147,18 @@ def HomePage():
     if st.button('Calculate Determinant'):
         st.write('Determinant of matrix A:', np.linalg.det(matrix_A.values))
 
+######################
+# Step by Step Solver Section
+######################
+def FindDeterminant(A):
+    if st.button('Find Determinant'):
+        A = np.array(A).reshape(len(A)//2, 2)
+        # find the determinant and print out the elementary row operations step by step
+        determinant = 0
+        for i in range(len(A)):
+            for j in range(len(A)):
+                if i == j:
+                    determinant *= A[i][j]
 
 ######################
 # Matrix Solver Section
