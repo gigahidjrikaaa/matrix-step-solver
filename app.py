@@ -106,12 +106,10 @@ def MatrixSolverPage():
     st.subheader('Matrix Input')
     col = st.columns(2)
     with col[0]:
-        st.number_input('Number of rows (m)', min_value=1, value=2, key='m')
+        m = st.number_input('Number of rows (m)', min_value=1, value=2, key='m')
     with col[1]:
-        st.number_input('Number of columns (n)', min_value=1, value=2, key='n')
+        n = st.number_input('Number of columns (n)', min_value=1, value=2, key='n')
 
-    m = st.number_input('Number of rows (m)', min_value=1, value=2, key='m')
-    n = st.number_input('Number of columns (n)', min_value=1, value=2, key='n')
     A = []
     subcolumns = []
     subcolumns = st.columns(n)
@@ -124,6 +122,7 @@ def MatrixSolverPage():
     if st.button('Find Determinant'):
         A = np.array(A).reshape(m, n)
         determinant = np.linalg.det(A)
+        determinant = round(determinant, 4)
         st.write('The determinant of the matrix is:', determinant)
 
     # Create a button to solve the matrix
