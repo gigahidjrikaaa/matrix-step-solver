@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+from fractions import Fraction
 
 ######################
 # Function to write pandas dataframe in latex
@@ -15,6 +16,42 @@ def df_to_latex(df):
     return latex
 
 ######################
+# Function for matrix number 1
+######################
+def display_matrix(matrix):
+    df = pd.DataFrame(matrix)
+    st.dataframe(df)
+
+# Function for Gaussian elimination
+def gauss_elimination(matrix):
+    n = len(matrix)
+    for i in range(n):
+        # Pivoting
+        if matrix[i][i] == 0:
+            for j in range(i+1, n):
+                if matrix[j][i] != 0:
+                    matrix[i], matrix[j] = matrix[j], matrix[i]
+                    st.write("Swap row", i+1, "and row", j+1)
+                    display_matrix(matrix)
+                    break
+        # Elimination
+        for j in range(i+1, n):
+            if matrix[j][i] != 0:
+                factor = matrix[j][i] / matrix[i][i]
+                for k in range(i, n):
+                    matrix[j][k] -= factor * matrix[i][k]
+                st.write("\nEliminate row", j+1, "using row", i+1, "with factor", Fraction(factor).limit_denominator())
+                display_matrix(matrix)
+    return matrix
+
+# Function to calculate determinant
+def determinant(matrix):
+    det = 1
+    for i in range(len(matrix)):
+        det *= matrix[i][i]
+    return det
+
+######################
 # Home Page Section
 # latex of the example linear equations written here
 ######################
@@ -24,10 +61,28 @@ def HomePage():
     st.info('Please select "Matrix Solver" from the navigation to start solving your own system of linear equations.')
 
     st.divider()
-    st.header('Introduction')
 
-    ### GARAPAN MANUAL SOAL VERSI LATEX TARUH DI SINI ###
-    
+    ### Matrix number 1 ###
+    # Displaying the matrix
+    st.header("Solving matrix number 1:")
+    matrix = [
+        [2, 3, 1, 2],
+        [-4, 1, -1, 0],
+        [0, 1, 2, 1],
+        [0, 0, 1, 0]
+    ]
+    display_matrix(matrix)
+
+    # Applying Gauss elimination
+    st.subheader("\nApplying Gaussian Elimination:")
+    gauss_matrix = gauss_elimination(matrix)
+    # Calculating determinant
+    det = determinant(gauss_matrix)
+    # Displaying the matrix after Gaussian elimination and determinant
+    st.write("\nMatrix after Gauss elimination:")
+    display_matrix(gauss_matrix)
+    st.write("\nDeterminant:", det)
+    st.divider()
 
     ### CONTOH ###
     st.write("Here's a simple example of a system of linear equations:")
@@ -141,7 +196,7 @@ def MatrixSolverPage():
         X_latex += r'\end{bmatrix}'
         st.latex(X_latex)
 
-            
+
 ######################
 # Operations for the Matrices
 # A and B are the matrices
@@ -200,11 +255,14 @@ def TwoMatrixOperationsPage():
 
     with col[1]:
         if st.button('Addition'):
-            st.latex(df_to_latex(pd.DataFrame(Addition(A, B))))
+            result = Addition(A, B)
+            st.write(pd.DataFrame(result))
         if st.button('Subtraction'):
-            st.latex(df_to_latex(pd.DataFrame(Subtraction(A, B))))
+            result = Subtraction(A, B)
+            st.write(pd.DataFrame(result))
         if st.button('Multiplication'):
-            st.latex(df_to_latex(pd.DataFrame(Multiplication(A, B))))
+            result = Multiplication(A, B)
+            st.write(pd.DataFrame(result))
     
     # Create a button to solve the matrix
     if st.button('Solve'):
@@ -226,7 +284,8 @@ def TwoMatrixOperationsPage():
                     else:
                         X_latex += r' \\ '
             X_latex += r'\end{bmatrix}'
-            st.latex(X_latex)       
+            st.latex(X_latex)
+ 
 
 ######################
 # About Page Section
@@ -238,7 +297,7 @@ def AboutPage():
     st.write('This project is made by:')
     st.write('1. Giga Hidjrika Aura Adkhy - 21/479228/TK/52833')
     st.write('2. Salwa Maharani - 21/481194/TK/53113')
-    st.write('3. ')    
+    st.write('3. Noer Azizah PS - 20/463611/TK/51603')    
 
 ######################
 # Sidebar
