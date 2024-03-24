@@ -8,6 +8,6 @@ This program is made to solve a system of linear equations using the Gauss-Jorda
 [DOCS COMING SOON]
 
 ## Contributors
-1. Giga Hidjrika Aura Adkhy
+1. [Giga Hidjrika Aura Adkhy](www.github.com/gigahidjrika)
 2. Salwa Maharani
 3. Noer Azizah PS
