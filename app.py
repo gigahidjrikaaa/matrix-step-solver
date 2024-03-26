@@ -234,6 +234,30 @@ def TwoMatrixOperationsPage():
                         X_latex += r' \\ '
             X_latex += r'\end{bmatrix}'
             st.latex(X_latex)
+
+######################
+# Linear Equation Solver Section
+# Page for custom linear equation solver.
+######################
+def LinearEquationSolverPage():
+    st.title('Linear Equation Solver')
+    st.write('This is the Linear Equation Solver page.')
+    st.write('This page will help you solve a system of linear equations using the matrix method.')
+    
+    '''
+    Linear Equation System:
+    -x1 + 6x2 + 4x3 -2x4 = 3
+    x1 - 5x2 + x3 + 5x4 = 7
+    4x1 + 9x2 + 6x3 - 7x4 = 10
+    '''
+    st.write('Example linear equation system:')
+    st.latex(r'''
+    \begin{align*}
+    -x_1 + 6x_2 + 4x_3 -2x_4 &= 3 \\
+    x_1 - 5x_2 + x_3 + 5x_4 &= 7 \\
+    4x_1 + 9x_2 + 6x_3 - 7x_4 &= 10
+    \end{align*}
+    ''')
  
 
 ######################
@@ -254,7 +278,7 @@ def AboutPage():
 st.sidebar.title('Matrix Solver')
 st.sidebar.write('Vector and Matrix Theory Project.')
 # Sidebar Navigation to Home
-nav = st.sidebar.radio('', ['Home', 'Single Matrix Solver', 'Two Matrix Operations', 'About'])
+nav = st.sidebar.radio('', ['Home', 'Single Matrix Solver', 'Two Matrix Operations', 'Linear Equation System Solver', 'About'])
 
 
 ######################
@@ -266,5 +290,7 @@ elif nav == 'Single Matrix Solver':
     MatrixSolverPage()
 elif nav == 'Two Matrix Operations':
     TwoMatrixOperationsPage()
+elif nav == 'Linear Equation System Solver':
+    LinearEquationSolverPage()
 else:
     AboutPage()
