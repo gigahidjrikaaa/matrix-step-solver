@@ -84,69 +84,6 @@ def HomePage():
     st.write("\nDeterminant:", det)
     st.divider()
 
-    ### CONTOH ###
-    st.write("Here's a simple example of a system of linear equations:")
-    st.latex(r'''
-    \begin{align*}
-    x + y + z &= 6 \\
-    y + z &= -4 \\
-    z &= 3
-    \end{align*}
-    ''')
-
-    st.write("This system of linear equations can be represented as a matrix equation:")
-    st.latex(r'''
-    \begin{bmatrix}
-    1 & 1 & 1 \\
-    0 & 1 & 1 \\
-    0 & 0 & 1
-    \end{bmatrix}
-    \begin{bmatrix}
-    x \\
-    y \\
-    z
-    \end{bmatrix}
-    =
-    \begin{bmatrix}
-    6 \\
-    -4 \\
-    3
-    \end{bmatrix}
-    ''')
-            
-    # Create a matrix using numpy
-    A = np.array([[1, 1, 1], [0, 1, 1], [0, 0, 1]])
-    b = np.array([6, -4, 3])
-    matrix_A = pd.DataFrame(A)
-    matrix_b = pd.DataFrame(b, columns=['Constants'])
-    x = np.linalg.solve(A, b)
-    st.write("The solution to the system of linear equations is:")
-    st.write(x)
-    st.latex(r'''
-    \begin{bmatrix}
-    x \\
-    y \\
-    z
-    \end{bmatrix}
-    =
-    \begin{bmatrix}
-    1 \\
-    -7 \\
-    3
-    \end{bmatrix}
-    ''')
-
-    # Matrix using dataframe
-    st.write('Matrix using dataframe:')
-
-    # Test data editor
-    matrix_A = st.data_editor(matrix_A, hide_index=True, key='matrix_A')
-    st.data_editor(matrix_b)
-
-    # When matrix_A is edited, the value of determinant will be updated
-    if st.button('Calculate Determinant'):
-        st.write('Determinant of matrix A:', np.linalg.det(matrix_A.values))
-
 ######################
 # Step by Step Solver Section
 ######################
