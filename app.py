@@ -283,18 +283,30 @@ def LinearEquationSolverPage():
 
                 steps.append(np.copy(augmented_matrix)) 
         return augmented_matrix[:, -1], steps
-    if st.button('Solve'):
-        solution, steps = solve_equations_gauss_jordan(coefficients)
-        if solution is not None:
-            st.success("The system of equations has a unique solution:")
-            st.write("Solution:")
-            st.write(solution)
+    
+    if num_equations < num_variables:
+        st.error("The system of equations may have no unique solution as the number of equations is less than the number of variables.")
+        if st.button('Show Gauss-Jordan Elimination Steps'):
+            _, steps = solve_equations_gauss_jordan(coefficients)
             st.write("Gauss-Jordan Elimination Steps:")
             for step in steps:
                 st.write(step)
-        else:
-            st.error("The system of equations cannot be solved.")
-
+    else:
+        if st.button('Solve'):
+            solution, steps = solve_equations_gauss_jordan(coefficients)
+            if solution is not None:
+                st.success("The system of equations has a unique solution:")
+                st.write("Solution:")
+                st.write(solution)
+                st.write("Gauss-Jordan Elimination Steps:")
+                for step in steps:
+                    st.write(step)
+            else:
+                st.error("The system of equations cannot be solved.")
+                if st.button('Show Gauss-Jordan Elimination Steps'):
+                    st.write("Gauss-Jordan Elimination Steps:")
+                    for step in steps:
+                        st.write(step)
 
     # '''
     # Linear Equation System:
