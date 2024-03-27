@@ -51,6 +51,7 @@ def determinant(matrix):
         det *= matrix[i][i]
     return det
 
+
 ######################
 # Home Page Section
 # latex of the example linear equations written here
@@ -242,22 +243,56 @@ def TwoMatrixOperationsPage():
 def LinearEquationSolverPage():
     st.title('Linear Equation Solver')
     st.write('This is the Linear Equation Solver page.')
-    st.write('This page will help you solve a system of linear equations using the matrix method.')
+    st.write('This page will help you solve a system of linear equations using the substitution method.')
     
-    '''
-    Linear Equation System:
-    -x1 + 6x2 + 4x3 -2x4 = 3
-    x1 - 5x2 + x3 + 5x4 = 7
-    4x1 + 9x2 + 6x3 - 7x4 = 10
-    '''
-    st.write('Example linear equation system:')
-    st.latex(r'''
-    \begin{align*}
-    -x_1 + 6x_2 + 4x_3 -2x_4 &= 3 \\
-    x_1 - 5x_2 + x_3 + 5x_4 &= 7 \\
-    4x_1 + 9x_2 + 6x_3 - 7x_4 &= 10
-    \end{align*}
-    ''')
+    st.subheader('Equation Input')
+    coefficients = []
+    subcolumns = []
+    num_variables = int(st.number_input("Enter the number of variables:", min_value=1, step=1, value=2))
+    num_equations = int(st.number_input("Enter the number of equations:", min_value=1, step=1, value=2))
+
+    st.write("Enter the coefficients for each equation:")
+    for i in range(num_equations):
+        equation = []
+        for j in range(num_variables):
+            equation.append(int(st.number_input(f"Coefficient for variable {j+1} of equation {i+1}:")))
+        equation.append(int(st.number_input(f"Constant term of equation {i+1}:")))
+        coefficients.append(equation)
+
+    # Function to solve the equations using substitution method
+    def solve_equations_substitution(coefficients):
+        A = np.array([equation[:-1] for equation in coefficients])  # Extract coefficients for variables
+        b = np.array([equation[-1] for equation in coefficients])  # Extract constant terms
+
+        try:
+            solution = np.linalg.solve(A, b)
+            return solution
+        except np.linalg.LinAlgError:
+            return None
+
+    # Create a button to solve the equations
+    if st.button('Solve'):
+        solution = solve_equations_substitution(coefficients)
+        if solution is not None:
+            st.success("The system of equations has a unique solution:")
+            st.write(solution)
+        else:
+            st.error("The system of equations cannot be solved.")
+    
+    # '''
+    # Linear Equation System:
+    # -x1 + 6x2 + 4x3 -2x4 = 3
+    # x1 - 5x2 + x3 + 5x4 = 7
+    # 4x1 + 9x2 + 6x3 - 7x4 = 10
+    # '''
+    # st.write('Example linear equation system:')
+    # st.latex(r'''
+    # \begin{align*}
+    # -x_1 + 6x_2 + 4x_3 -2x_4 &= 3 \\
+    # x_1 - 5x_2 + x_3 + 5x_4 &= 7 \\
+    # 4x_1 + 9x_2 + 6x_3 - 7x_4 &= 10
+    # \end{align*}
+    # ''')
  
 
 ######################
