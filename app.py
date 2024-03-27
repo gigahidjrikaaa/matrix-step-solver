@@ -248,16 +248,18 @@ def LinearEquationSolverPage():
     
     st.subheader('Equation Input')
     coefficients = []
-    subcolumns = []
     num_variables = int(st.number_input("Enter the number of variables:", min_value=1, step=1, value=2))
     num_equations = int(st.number_input("Enter the number of equations:", min_value=1, step=1, value=2))
 
     st.write("Enter the coefficients for each equation:")
+    column = st.columns(num_variables + 1)
     for i in range(num_equations):
         equation = []
         for j in range(num_variables):
-            equation.append(int(st.number_input(f"Coefficient for variable {j+1} of equation {i+1}:")))
-        equation.append(int(st.number_input(f"Constant term of equation {i+1}:")))
+            with column[j]:
+                equation.append(int(st.number_input(f"Coefficient for x{j+1} of Eq.({i+1}):")))
+        with column[-1]:
+            equation.append(int(st.number_input(f"Constant term of Eq.({i+1}):")))
         coefficients.append(equation)
 
     def solve_equations_gauss_jordan(coefficients):
