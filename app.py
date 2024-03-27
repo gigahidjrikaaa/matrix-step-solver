@@ -240,10 +240,11 @@ def TwoMatrixOperationsPage():
 # Linear Equation Solver Section
 # Page for custom linear equation solver.
 ######################
+
 def LinearEquationSolverPage():
     st.title('Linear Equation Solver')
     st.write('This is the Linear Equation Solver page.')
-    st.write('This page will help you solve a system of linear equations using the substitution method.')
+    st.write('This page will help you solve a system of linear equations using the Gauss-Jordan elimination method.')
     
     st.subheader('Equation Input')
     coefficients = []
@@ -259,26 +260,42 @@ def LinearEquationSolverPage():
         equation.append(int(st.number_input(f"Constant term of equation {i+1}:")))
         coefficients.append(equation)
 
-    # Function to solve the equations using substitution method
-    def solve_equations_substitution(coefficients):
-        A = np.array([equation[:-1] for equation in coefficients])  # Extract coefficients for variables
-        b = np.array([equation[-1] for equation in coefficients])  # Extract constant terms
+    def solve_equations_gauss_jordan(coefficients):
+        steps = []  
+        A = np.array([equation[:-1] for equation in coefficients], dtype=float) 
+        b = np.array([equation[-1] for equation in coefficients], dtype=float)  
+        augmented_matrix = np.column_stack((A, b))
 
-        try:
-            solution = np.linalg.solve(A, b)
-            return solution
-        except np.linalg.LinAlgError:
-            return None
+        num_rows, num_cols = augmented_matrix.shape
 
-    # Create a button to solve the equations
+        for lead in range(num_rows):
+            if lead < num_cols:
+                diagonal_element = augmented_matrix[lead, lead]
+                if diagonal_element != 0:
+                    augmented_matrix[lead] /= diagonal_element
+
+                steps.append(np.copy(augmented_matrix))
+
+                for row in range(num_rows):
+                    if row != lead:
+                        coefficient = augmented_matrix[row, lead]
+                        augmented_matrix[row] -= coefficient * augmented_matrix[lead]
+
+                steps.append(np.copy(augmented_matrix)) 
+        return augmented_matrix[:, -1], steps
     if st.button('Solve'):
-        solution = solve_equations_substitution(coefficients)
+        solution, steps = solve_equations_gauss_jordan(coefficients)
         if solution is not None:
             st.success("The system of equations has a unique solution:")
+            st.write("Solution:")
             st.write(solution)
+            st.write("Gauss-Jordan Elimination Steps:")
+            for step in steps:
+                st.write(step)
         else:
             st.error("The system of equations cannot be solved.")
-    
+
+
     # '''
     # Linear Equation System:
     # -x1 + 6x2 + 4x3 -2x4 = 3
