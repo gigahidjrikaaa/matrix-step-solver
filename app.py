@@ -262,10 +262,17 @@ def LinearEquationSolverPage():
             equation.append(int(st.number_input(f"Constant term of Eq.({i+1}):")))
         coefficients.append(equation)
 
+    ##########################
+    # Gauss-Jordan Elimination
+    ##########################
     def solve_equations_gauss_jordan(coefficients):
-        steps = []  
-        A = np.array([equation[:-1] for equation in coefficients], dtype=float) 
-        b = np.array([equation[-1] for equation in coefficients], dtype=float)  
+        steps = []  # List to store intermediate augmented matrices
+
+        # Convert coefficients to NumPy arrays for efficient matrix operations
+        A = np.array([equation[:-1] for equation in coefficients], dtype=float)
+        b = np.array([equation[-1] for equation in coefficients], dtype=float)
+
+        # Create the augmented matrix
         augmented_matrix = np.column_stack((A, b))
 
         num_rows, num_cols = augmented_matrix.shape
@@ -273,18 +280,30 @@ def LinearEquationSolverPage():
         for lead in range(num_rows):
             if lead < num_cols:
                 diagonal_element = augmented_matrix[lead, lead]
-                if diagonal_element != 0:
-                    augmented_matrix[lead] /= diagonal_element
 
-                steps.append(np.copy(augmented_matrix))
+                # Check for leading zero (inconsistent system)
+                if diagonal_element == 0:
+                    # Check if the remaining elements in the column are also zero
+                    if np.all(augmented_matrix[lead:, lead] == 0):
+                        continue  # Skip to the next leading variable (might have a solution)
+                    else:
+                        raise ValueError("System of equations is inconsistent (no solution exists).")
 
-                for row in range(num_rows):
-                    if row != lead:
-                        coefficient = augmented_matrix[row, lead]
-                        augmented_matrix[row] -= coefficient * augmented_matrix[lead]
+                # Normalize the leading row (divide by diagonal element)
+                augmented_matrix[lead] /= diagonal_element
+                steps.append(np.copy(augmented_matrix))  # Record the step
 
-                steps.append(np.copy(augmented_matrix)) 
-        return augmented_matrix[:, -1], steps
+                # Eliminate elements below the diagonal element in the current column
+                for row in range(lead + 1, num_rows):
+                    coefficient = augmented_matrix[row, lead]
+                    augmented_matrix[row] -= coefficient * augmented_matrix[lead]
+                    steps.append(np.copy(augmented_matrix))  # Record the step
+
+        # Extract the solution from the reduced row echelon form
+        solution = augmented_matrix[:, -1]
+
+        return solution, steps
+
     
     if num_equations < num_variables:
         st.error("The system of equations may have no unique solution as the number of equations is less than the number of variables.")
