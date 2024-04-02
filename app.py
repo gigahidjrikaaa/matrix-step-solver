@@ -48,6 +48,7 @@ def determinant(matrix):
         det *= matrix[i][i]
     return det
 
+
 ######################
 # Home Page Section
 # latex of the example linear equations written here
@@ -82,69 +83,6 @@ def HomePage():
     st.subheader("Determinant")
     st.latex(r'D = ' + str(det))
     st.divider()
-
-    ### CONTOH ###
-    st.write("Here's a simple example of a system of linear equations:")
-    st.latex(r'''
-    \begin{align*}
-    x + y + z &= 6 \\
-    y + z &= -4 \\
-    z &= 3
-    \end{align*}
-    ''')
-
-    st.write("This system of linear equations can be represented as a matrix equation:")
-    st.latex(r'''
-    \begin{bmatrix}
-    1 & 1 & 1 \\
-    0 & 1 & 1 \\
-    0 & 0 & 1
-    \end{bmatrix}
-    \begin{bmatrix}
-    x \\
-    y \\
-    z
-    \end{bmatrix}
-    =
-    \begin{bmatrix}
-    6 \\
-    -4 \\
-    3
-    \end{bmatrix}
-    ''')
-            
-    # Create a matrix using numpy
-    A = np.array([[1, 1, 1], [0, 1, 1], [0, 0, 1]])
-    b = np.array([6, -4, 3])
-    matrix_A = pd.DataFrame(A)
-    matrix_b = pd.DataFrame(b, columns=['Constants'])
-    x = np.linalg.solve(A, b)
-    st.write("The solution to the system of linear equations is:")
-    st.write(x)
-    st.latex(r'''
-    \begin{bmatrix}
-    x \\
-    y \\
-    z
-    \end{bmatrix}
-    =
-    \begin{bmatrix}
-    1 \\
-    -7 \\
-    3
-    \end{bmatrix}
-    ''')
-
-    # Matrix using dataframe
-    st.write('Matrix using dataframe:')
-
-    # Test data editor
-    matrix_A = st.data_editor(matrix_A, hide_index=True, key='matrix_A')
-    st.data_editor(matrix_b)
-
-    # When matrix_A is edited, the value of determinant will be updated
-    if st.button('Calculate Determinant'):
-        st.write('Determinant of matrix A:', np.linalg.det(matrix_A.values))
 
 ######################
 # Step by Step Solver Section
@@ -296,6 +234,114 @@ def TwoMatrixOperationsPage():
                         X_latex += r' \\ '
             X_latex += r'\end{bmatrix}'
             st.latex(X_latex)
+
+######################
+# Linear Equation Solver Section
+# Page for custom linear equation solver.
+######################
+
+def LinearEquationSolverPage():
+    st.title('Linear Equation Solver')
+    st.write('This is the Linear Equation Solver page.')
+    st.write('This page will help you solve a system of linear equations using the Gauss-Jordan elimination method.')
+    
+    st.subheader('Equation Input')
+    coefficients = []
+    num_variables = int(st.number_input("Enter the number of variables:", min_value=1, step=1, value=2))
+    num_equations = int(st.number_input("Enter the number of equations:", min_value=1, step=1, value=2))
+
+    st.write("Enter the coefficients for each equation:")
+    column = st.columns(num_variables + 1)
+    for i in range(num_equations):
+        equation = []
+        for j in range(num_variables):
+            with column[j]:
+                equation.append(int(st.number_input(f"Coefficient for x{j+1} of Eq.({i+1}):")))
+        with column[-1]:
+            equation.append(int(st.number_input(f"Constant term of Eq.({i+1}):")))
+        coefficients.append(equation)
+
+    ##########################
+    # Gauss-Jordan Elimination
+    ##########################
+    def solve_equations_gauss_jordan(coefficients):
+        steps = []  # List to store intermediate augmented matrices
+
+        # Convert coefficients to NumPy arrays for efficient matrix operations
+        A = np.array([equation[:-1] for equation in coefficients], dtype=float)
+        b = np.array([equation[-1] for equation in coefficients], dtype=float)
+
+        # Create the augmented matrix
+        augmented_matrix = np.column_stack((A, b))
+
+        num_rows, num_cols = augmented_matrix.shape
+
+        for lead in range(num_rows):
+            if lead < num_cols:
+                diagonal_element = augmented_matrix[lead, lead]
+
+                # Check for leading zero (inconsistent system)
+                if diagonal_element == 0:
+                    # Check if the remaining elements in the column are also zero
+                    if np.all(augmented_matrix[lead:, lead] == 0):
+                        continue  # Skip to the next leading variable (might have a solution)
+                    else:
+                        raise ValueError("System of equations is inconsistent (no solution exists).")
+
+                # Normalize the leading row (divide by diagonal element)
+                augmented_matrix[lead] /= diagonal_element
+                steps.append(np.copy(augmented_matrix))  # Record the step
+
+                # Eliminate elements below the diagonal element in the current column
+                for row in range(lead + 1, num_rows):
+                    coefficient = augmented_matrix[row, lead]
+                    augmented_matrix[row] -= coefficient * augmented_matrix[lead]
+                    steps.append(np.copy(augmented_matrix))  # Record the step
+
+        # Extract the solution from the reduced row echelon form
+        solution = augmented_matrix[:, -1]
+
+        return solution, steps
+
+    
+    if num_equations < num_variables:
+        st.error("The system of equations may have no unique solution as the number of equations is less than the number of variables.")
+        if st.button('Show Gauss-Jordan Elimination Steps'):
+            _, steps = solve_equations_gauss_jordan(coefficients)
+            st.write("Gauss-Jordan Elimination Steps:")
+            for step in steps:
+                st.write(step)
+    else:
+        if st.button('Solve'):
+            solution, steps = solve_equations_gauss_jordan(coefficients)
+            if solution is not None:
+                st.success("The system of equations has a unique solution:")
+                st.write("Solution:")
+                st.write(solution)
+                st.write("Gauss-Jordan Elimination Steps:")
+                for step in steps:
+                    st.write(step)
+            else:
+                st.error("The system of equations cannot be solved.")
+                if st.button('Show Gauss-Jordan Elimination Steps'):
+                    st.write("Gauss-Jordan Elimination Steps:")
+                    for step in steps:
+                        st.write(step)
+
+    # '''
+    # Linear Equation System:
+    # -x1 + 6x2 + 4x3 -2x4 = 3
+    # x1 - 5x2 + x3 + 5x4 = 7
+    # 4x1 + 9x2 + 6x3 - 7x4 = 10
+    # '''
+    # st.write('Example linear equation system:')
+    # st.latex(r'''
+    # \begin{align*}
+    # -x_1 + 6x_2 + 4x_3 -2x_4 &= 3 \\
+    # x_1 - 5x_2 + x_3 + 5x_4 &= 7 \\
+    # 4x_1 + 9x_2 + 6x_3 - 7x_4 &= 10
+    # \end{align*}
+    # ''')
  
 
 ######################
@@ -316,7 +362,7 @@ def AboutPage():
 st.sidebar.title('Matrix Solver')
 st.sidebar.write('Vector and Matrix Theory Project.')
 # Sidebar Navigation to Home
-nav = st.sidebar.radio('', ['Home', 'Single Matrix Solver', 'Two Matrix Operations', 'About'])
+nav = st.sidebar.radio('', ['Home', 'Single Matrix Solver', 'Two Matrix Operations', 'Linear Equation System Solver', 'About'])
 
 
 ######################
@@ -328,5 +374,7 @@ elif nav == 'Single Matrix Solver':
     MatrixSolverPage()
 elif nav == 'Two Matrix Operations':
     TwoMatrixOperationsPage()
+elif nav == 'Linear Equation System Solver':
+    LinearEquationSolverPage()
 else:
     AboutPage()
