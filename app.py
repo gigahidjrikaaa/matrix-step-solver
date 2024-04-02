@@ -3,29 +3,26 @@ import pandas as pd
 import numpy as np
 from fractions import Fraction
 
-######################
-# Function to write pandas dataframe in latex
-######################
-def df_to_latex(df):
-    # Convert the dataframe to a string in latex format
-    latex = df.to_latex(index=False, escape=False)
-    # Replace the \n with \\ to make it a single line
-    latex = latex.replace('\n', '\\\\\n')
-    # Add the latex environment
-    latex = r'\begin{bmatrix}' + '\n' + latex + r'\end{bmatrix}'
-    return latex
 
 ######################
 # Function for matrix number 1
 ######################
 def display_matrix(matrix):
     df = pd.DataFrame(matrix)
-    st.dataframe(df)
+    # Convert the dataframe to KaTeX format
+    latex_matrix = df.to_latex(index=False, escape=False)
+    # Round the numbers to 2 decimal places
+    latex_matrix = latex_matrix.replace('.000000', '').replace('.000', '').replace('.00', '')
+    latex_matrix = latex_matrix.replace(r'\begin{tabular}', r'\begin{bmatrix}').replace(r'\end{tabular}', r'\end{bmatrix}'.replace(r'\hline', '')).replace(r'\\', r'\\ \,').replace(r'\n', r'').replace(r'\toprule', '').replace(r'\midrule', '').replace(r'\bottomrule', '').replace(r'rrrr', r'')
+    # Display the matrix using KaTeX
+    st.latex(latex_matrix)
+    
 
 # Function for Gaussian elimination
 def gauss_elimination(matrix):
     n = len(matrix)
     for i in range(n):
+        st.write("\nStep", i+1, ":")
         # Pivoting
         if matrix[i][i] == 0:
             for j in range(i+1, n):
@@ -81,7 +78,9 @@ def HomePage():
     # Displaying the matrix after Gaussian elimination and determinant
     st.write("\nMatrix after Gauss elimination:")
     display_matrix(gauss_matrix)
-    st.write("\nDeterminant:", det)
+    st.divider()
+    st.subheader("Determinant")
+    st.latex(r'D = ' + str(det))
     st.divider()
 
     ### CONTOH ###
