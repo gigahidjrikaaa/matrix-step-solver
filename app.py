@@ -25,29 +25,41 @@ def remove_column_index(latex_matrix):
 ######################
 def display_matrix(matrix):
     df = pd.DataFrame(matrix)
+    
     # Convert the dataframe to KaTeX format
     latex_matrix = df.to_latex(index=False, escape=False,)
     latex_matrix = remove_column_index(latex_matrix)
-    # Round the numbers to 2 decimal places
+    
+    # Round the numbers
     latex_matrix = latex_matrix.replace('.000000', '').replace('.000', '').replace('.00', '')
-    latex_matrix = latex_matrix.replace(r'\begin{tabular}', r'\begin{bmatrix}').replace(r'\end{tabular}', r'\end{bmatrix}'.replace(r'\hline', '')).replace(r'\\', r'\\ \,').replace(r'\n', r'').replace(r'\toprule', '').replace(r'\midrule', '').replace(r'\bottomrule', '').replace(r'rrrr', r'')
+    
+    # Clean the latex_matrix
+    latex_matrix = latex_matrix.replace(r'\begin{tabular}', r'\begin{bmatrix}').replace(r'\end{tabular}', r'\end{bmatrix}'.replace(r'\hline', '')).replace(r'\\', r'\\ \,')
+    
+    # Find the index of '{r' until '}' and replace it with ''
+    while latex_matrix.find('{r') != -1:
+        start = latex_matrix.find('{r')
+        end = latex_matrix.find('}', start) + 1
+        latex_matrix = latex_matrix[:start] + latex_matrix[end:]
+    
     # Display the matrix using KaTeX
     st.latex(latex_matrix)
-    
 
 # Function for Gaussian elimination
 def gauss_elimination(matrix):
     n = len(matrix)
     for i in range(n):
         st.write("\nStep", i+1, ":")
+        
         # Pivoting
         if matrix[i][i] == 0:
             for j in range(i+1, n):
                 if matrix[j][i] != 0:
                     matrix[i], matrix[j] = matrix[j], matrix[i]
-                    st.write("Swap row", i+1, "and row", j+1)
+                    st.write("Pivoting: Swap row", i+1, "and row", j+1)
                     display_matrix(matrix)
                     break
+
         # Elimination
         for j in range(i+1, n):
             if matrix[j][i] != 0:
@@ -125,11 +137,13 @@ def MatrixSolverPage():
     st.divider()
 
     st.subheader('Matrix Input')
+    st.caption('Please enter the size of the matrix A.')
     col = st.columns(2)
     with col[0]:
         m = st.number_input('Number of rows (m)', min_value=1, value=2, key='m')
     with col[1]:
         n = st.number_input('Number of columns (n)', min_value=1, value=2, key='n')
+    st.divider()
 
     A = []
     subcolumns = []
@@ -138,13 +152,23 @@ def MatrixSolverPage():
         for j in range(n):
             with subcolumns[j]:
                 A.append(st.number_input(f'A[{i+1},{j+1}]', value=0, key=f'A[{i+1},{j+1}]'))
+    
+    # Create a dataframe matrix from the input
+    custom_matrix = np.array(A).reshape(m, n)
+    custom_matrix = custom_matrix.astype(int)
+    st.write('The matrix A is:')
+    st.write(custom_matrix)
+
+    st.write('The matrix A is:')
+    display_matrix(custom_matrix)
 
     # Create a button to get the determinant step by step
     if st.button('Find Determinant'):
-        A = np.array(A).reshape(m, n)
-        determinant = np.linalg.det(A)
-        determinant = round(determinant, 4)
-        st.write('The determinant of the matrix is:', determinant)
+        gauss_elimination(A)
+        # A = np.array(A).reshape(m, n)
+        # determinant = np.linalg.det(A)
+        # determinant = round(determinant, 4)
+        # st.write('The determinant of the matrix is:', determinant)
 
     # Create a button to solve the matrix
     if st.button('Solve'):
