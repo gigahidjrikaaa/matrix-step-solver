@@ -155,36 +155,19 @@ def MatrixSolverPage():
     
     # Create a dataframe matrix from the input
     custom_matrix = np.array(A).reshape(m, n)
-    custom_matrix = custom_matrix.astype(int)
-    st.write('The matrix A is:')
-    st.write(custom_matrix)
 
     st.write('The matrix A is:')
     display_matrix(custom_matrix)
 
     # Create a button to get the determinant step by step
-    if st.button('Find Determinant'):
-        gauss_elimination(A)
+    if st.button('Find Determinant using Gauss Elimination'):
+        gauss_elimination(custom_matrix)
+        
         # A = np.array(A).reshape(m, n)
         # determinant = np.linalg.det(A)
         # determinant = round(determinant, 4)
         # st.write('The determinant of the matrix is:', determinant)
-
-    # Create a button to solve the matrix
-    if st.button('Solve'):
-        A = np.array(A).reshape(m, n)
-        b = np.array([6, -4, 3])
-        x = np.linalg.solve(A, b)
-        st.write('The solution to the system of linear equations is:')
-        st.write(x)
-        # Write the solution in latex
-        X_latex = r'\begin{bmatrix}'
-        for i in range(x.shape[0]): 
-            X_latex += str(x[i])
-            if i < x.shape[0] - 1:
-                X_latex += r' \\ '
-        X_latex += r'\end{bmatrix}'
-        st.latex(X_latex)
+    FindDeterminant(custom_matrix)
 
 
 ######################
