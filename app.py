@@ -161,13 +161,11 @@ def MatrixSolverPage():
 
     # Create a button to get the determinant step by step
     if st.button('Find Determinant using Gauss Elimination'):
-        gauss_elimination(custom_matrix)
-        
-        # A = np.array(A).reshape(m, n)
-        # determinant = np.linalg.det(A)
-        # determinant = round(determinant, 4)
-        # st.write('The determinant of the matrix is:', determinant)
-    FindDeterminant(custom_matrix)
+        ref_matrix = gauss_elimination(custom_matrix)
+        st.divider()
+        st.subheader('Determinant')
+        det = determinant(ref_matrix)
+        st.latex(r'D = ' + str(det))
 
 
 ######################
