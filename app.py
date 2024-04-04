@@ -224,17 +224,21 @@ def TwoMatrixOperationsPage():
                 with subcolumns[j]:
                     B.append(st.number_input(f'B[{i+1},{j+1}]', value=0, key=f'B[{i+1},{j+1}]'))
 
+    show_result = False
     with col[1]:
         if st.button('Addition'):
             result = Addition(A, B)
-            st.write(pd.DataFrame(result))
+            show_result = True
         if st.button('Subtraction'):
             result = Subtraction(A, B)
-            st.write(pd.DataFrame(result))
+            show_result = True
         if st.button('Multiplication'):
             result = Multiplication(A, B)
-            st.write(pd.DataFrame(result))
+            show_result = True
     
+    if show_result:
+        display_matrix(result)
+
     # Create a button to solve the matrix
     if st.button('Solve'):
         A = np.array(A).reshape(m, n)
